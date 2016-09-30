@@ -2,7 +2,7 @@ package controle;
 
 import java.util.List;
 import modelo.Entidade;
-import modelo.Utils.MessagesUtil;
+import modelo.utils.MessagesUtil;
 import persistencia.Dao;
 
 /**

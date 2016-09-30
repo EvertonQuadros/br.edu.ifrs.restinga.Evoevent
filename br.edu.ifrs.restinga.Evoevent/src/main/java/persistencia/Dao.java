@@ -3,6 +3,7 @@ package persistencia;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import modelo.Entidade;
+import modelo.utils.HibernateUtil;
 import org.hibernate.Session;
 
 /**
