@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      <ui:composition template="../templates/TmpIndex.xhtml">
+          
+        <ui:define name="head">
+         
+            <h:panelGrid columns="4">
+                
+                <h:form>
+
+                    <p:commandButton styleClass="buttonHeadHead" ajax="false" value="Home" action="index" />
+                    
+                </h:form>
+            
+            </h:panelGrid>    
+                
+        </ui:define>
+          
+        <ui:define name="body">
+                
+            <p:outputPanel id="Painel" layout="responsive" styleClass="emailConfirmationPanel">
+                    
+                <h:form id="cadastroForm">
+
+                    <p:growl />
+
+                    <p:panelGrid  columns="4" styleClass="DialogForm">
+
+                        <p:outputLabel for="codigo" value="Codigo Confirmação:" />
+                        <p:inputText id="codigo" label="O código digitado" value="#{Usuario.crud.instance.codigo}" placeholder="Codigo" size="40" maxlength="40" required="true"/>
+
+                        <f:facet name="footer">
+                            <p:commandButton ajax="false" value="Confirmar" actionListener="#{Requisicao.requisitaCadastro(Usuario.confirmarEmail())}" />
+                        </f:facet>
+
+                    </p:panelGrid>
+
+               </h:form>      
+
+            </p:outputPanel>
+              
+        </ui:define>  
+
+        <ui:define name="footer">
+            <h2 class="footerText">Evoevent 0.1.0.0 Alpha ----- Eventos Acadêmicos  -  IFRS 2016/2</h2>
+        </ui:define>
+    
+      </ui:composition>
+    
+</html>

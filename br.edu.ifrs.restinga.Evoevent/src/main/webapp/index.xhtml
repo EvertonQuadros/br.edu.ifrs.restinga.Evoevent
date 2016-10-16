@@ -1,14 +1,163 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      <ui:composition template="resources/templates/TmpIndex.xhtml">
+          
+        <ui:define name="head">
+         
+            <h:panelGrid columns="4">
+                
+                <h:form>
+
+                    <p:commandButton styleClass="buttonHeadSelected" ajax="false" value="Home" actionListener="index" />
+                    <!-- <p:commandButton styleClass="buttonHead" ajax="false" value="Buscar Eventos" action="home"/> Desativado até a implementação dos eventos -->
+                    <f:event type="preRenderView" listener="#{Perfil.init()}"/>
+                    
+                </h:form>
+            
+                <h:form styleClass="loginBar">
+
+                    <p:outputLabel for="login" />
+                    <p:inputText id="login" label="O login digitado" value="#{Perfil.crud.instance.login}" placeholder="USUÁRIO" size="50" maxlength="100" />
+                    <p:outputLabel for="senha" />
+                    <p:password id="senha" label="A senha digitada"  value="#{Perfil.crud.instance.senha}" placeholder="SENHA" size="30" maxlength="50" />
+                    
+                    <p:commandButton ajax="false" value="Login" action="#{Perfil.operacao.doLogin(Perfil.crud)}"/> 
+                    
+                    <p:commandButton value="Cadastrar-se" update=":Painel" oncomplete="PF('cadastroDialog').show('#{component.clientId}')" />
+
+                </h:form>
+            
+            </h:panelGrid>    
+                
+        </ui:define>
+          
+        <ui:define name="body">
+              
+            <h2 class="bodyText">Seja bem vindo!</h2>
+  
+            <p:dialog header="Formulário de Cadastro" widgetVar="cadastroDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="false" modal="true" appendTo="@(body)">
+            
+                <p:outputPanel id="Painel" layout="responsive" >
+                    
+                    <h:form id="cadastroForm">
+                    
+                        <p:growl />
+                        
+                        <p:panelGrid  columns="4" styleClass="DialogForm">
+
+                            <p:outputLabel for="nome:" value="Nome:" />
+                            <p:inputText id="nome" label="O nome digitado" value="#{Usuario.crud.instance.nome}" placeholder="Nome" size="50" maxlength="100" required="true" validatorMessage="O nome contém caracteres inválidos!">
+                                <f:validateRegex pattern="^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$"/>
+                            </p:inputText>
+                            
+                            <p:outputLabel for="dataNasc" value="Data de Nascimento: "/>
+                            <p:calendar id="dataNasc" value="#{Usuario.crud.instance.dataNasc}" pattern="dd-MM-yyyy" placeholder="__-__-____" mask="true" required="true" mindate="#{formularioCadastroBean.dataMin}" maxdate="#{formularioCadastroBean.dataMax}" >
+                                <f:validator validatorId="datevalidator" />
+                            </p:calendar>
+                            
+                            <p:outputLabel for="rg" value="Rg: "/>
+                            <p:inputText label="rg" id="rg" size="15" maxlength="15" value="#{Usuario.crud.instance.rg}" placeholder="xxxxxxxxxxxxxxx" required="true" >
+                                <f:validateRegex pattern="[0-9]{10,15}"/>
+                                <f:validator validatorId="rgvalidator" />
+                            </p:inputText>
+                            
+                            <p:outputLabel for="cpf" value="Cpf: "/>
+                            <p:inputMask label="cpf" id="cpf" size="15" maxlength="14" value="#{Usuario.crud.instance.cpf}" placeholder="xxx.xxx.xxx-xx"  mask="999.999.999-99" required="true" >
+                                <f:validateRegex pattern="^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}"/>
+                                <f:validator validatorId="cpfvalidator" />
+                            </p:inputMask>
+                            
+                            <p:outputLabel for="curriculo" value="Currículo Lattes (opcional): "/>
+                            <p:inputText label="curriculo" onclick="$('#cadastroForm\\:curriculo').val('http://lattes.cnpq.br/');" id="curriculo" size="50" maxlength="100" value="#{Usuario.crud.instance.curriculo}" placeholder="http://lattes.cnpq.br/numero" validatorMessage="O endereço digitado deve ser válido!">
+                                <f:validateRegex pattern="^$|^(http://lattes\.cnpq\.br/)[0-9]{1,9}"/>
+                            </p:inputText>
+                            
+                            <p:outputLabel for="sexo" value="Sexo: "/>
+                            <p:selectOneRadio id="sexo" value="#{Usuario.crud.instance.sexo}" required="true" >
+                                <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                                <f:selectItem itemLabel="Feminino" itemValue="F"/>
+                            </p:selectOneRadio>
+                            
+                            <p:outputLabel for="profissao" value="Profissao: "/> 
+                            <p:selectOneMenu id="profissao" value="#{Usuario.crud.instance.profissao}" required="true" effect="fold" >
+                                <f:selectItem itemLabel="Selecione a profissão" itemValue="" />
+                                <f:selectItems value="#{formularioCadastroBean.profissao}" var="profissao" itemLabel="#{profissao}" itemValue="#{profissao}" />
+                            </p:selectOneMenu>
+  
+                            <p:outputLabel for="email" value="Email:" />
+                            <p:inputText id="email" label="O email digitado" value="#{Usuario.crud.instance.email}" placeholder="Email" size="50" maxlength="100" required="true" >
+                                <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                                <f:validator validatorId="emailvalidator" />
+                            </p:inputText>
+      
+                            <p:outputLabel for="instituicao" value="Instituição:"/>
+                            <p:selectOneMenu id="instituicao" value="#{Usuario.crud.instance.instituicao}" required="true" effect="fold" filter="true" filterMatchMode="contains">
+                                <f:selectItem itemLabel="Selecione a instituição" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{formularioCadastroBean.instituicao}" var="instituicao" itemLabel="#{instituicao}" itemValue="#{instituicao}" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel for="instrucao" value="Grau de Instrução:"/>
+                            <p:selectOneMenu id="instrucao" value="#{Usuario.crud.instance.instrucao}" required="true" effect="fold" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Selecione o grau de instrução" itemValue="" />
+                                <f:selectItems value="#{formularioCadastroBean.instrucao}" var="instrucao" itemLabel="#{instrucao}" itemValue="#{instrucao}" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel for="estado" value="Estado:"/>
+                            <p:selectOneMenu id="estado" value="#{Usuario.crud.instance.estado}" required="true" converter="#{Estado.converter}" effect="fade" filter="true" filterMatchMode="startsWith">
+                                <p:ajax update="cidade" process="@this" listener="#{Cidade.setLista(Usuario.crud.instance.estado)}"  /> 
+                                <f:selectItem itemLabel="Selecione o Estado" itemValue="0" noSelectionOption="true" />
+                                <f:selectItems value="#{Estado.crud.lista}" var="estados" itemLabel="#{estados.sigla}" itemValue="#{estados}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel for="cidade" value="Cidade:"/>
+                            <p:selectOneMenu id="cidade" value="#{Usuario.crud.instance.cidade}" required="true" converter="#{Cidade.converter}" effect="fade" filter="true" filterMatchMode="startsWith">
+                                <f:selectItem itemLabel="Selecione a cidade" itemValue="0" noSelectionOption="true" />
+                                <f:selectItems value="#{Cidade.crud.lista}" var="cidades" itemLabel="#{cidades.nome}" itemValue="#{cidades}" />
+                            </p:selectOneMenu>   
+                            
+                            <p:outputLabel for="interesse" value="Áreas de Interesse:"/>
+                            <p:selectManyCheckbox id="interesse" value="#{Usuario.crud.instance.interesse}" layout="grid" columns="3">
+                                <f:selectItems value="#{formularioCadastroBean.interesses}" var="interesse" itemLabel="#{interesse}" itemValue="#{interesse}" />
+                            </p:selectManyCheckbox>
+                            
+                            <p:outputLabel id="display" for="descricao" value="Descrição:"/>
+                            <p:inputTextarea id="descricao" value="#{Usuario.crud.instance.descricao}" rows="6" cols="40" counter="display" maxlength="256" counterTemplate="Descrição: {0} caracteres restantes." />
+                            
+                            <f:facet name="footer">
+                                <p:commandButton ajax="false" value="cadastrar" actionListener="#{Usuario.salvar()}" onsuccess="cadastroDialog.hide()"/>
+                            </f:facet>
+
+                        </p:panelGrid>
+
+                   </h:form>      
+                        
+                </p:outputPanel>
+            
+                </p:dialog>
+              
+        </ui:define>  
     
-    <h:head>
-        <title>Bem vindo Evoevent</title>
-    </h:head>
-    
-    <h:body>
-        Esta é a página inicial Evoevent2
-    </h:body>
+      </ui:composition>
     
 </html>

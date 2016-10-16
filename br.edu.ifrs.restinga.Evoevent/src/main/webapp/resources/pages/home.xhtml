@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      <ui:composition template="../templates/TmpPadrao.xhtml">
+          
+        <ui:define name="head">
+         
+            <h:panelGrid columns="4">
+                
+                <h:form>
+
+                    <p:commandButton styleClass="buttonHeadSelected" ajax="false" value="Home" action="home"/>
+                    <p:commandButton styleClass="buttonHead" id="logoutButton" icon="fa-home" ajax="false" value="Sair" action="#{Perfil.operacao.logout(Perfil.crud)}"/>
+                    <p:commandButton styleClass="buttonHead" id="avancado" icon="fa-home" ajax="false" value="OPÇÕES ADMINISTRATIVAS" action="administradorpage1" rendered="#{Perfil.crud.instance.tipo.equals('ADMINISTRADOR')}" />
+                    
+                    
+                </h:form>
+            
+            </h:panelGrid>    
+                
+        </ui:define>
+          
+        <ui:define name="body">
+                      
+                <h1>Olá #{Perfil.crud.instance.login}</h1>
+                <h2 class="bodyText">Em breve...</h2>
+        
+        </ui:define>  
+          
+      </ui:composition>
+    
+</html>

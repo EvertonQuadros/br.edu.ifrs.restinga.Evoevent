@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      <ui:composition template="../templates/TmpIndex.xhtml">
+          
+        <ui:define name="head">
+         
+            <h:panelGrid columns="4">
+                
+                <h:form>
+
+                    <p:commandButton styleClass="buttonHead" ajax="false" value="Home" action="home" />
+                    <p:commandButton styleClass="buttonHead" id="logoutButton" icon="fa-home" ajax="false" value="Sair" action="#{Perfil.operacao.logout(Perfil.crud)}"/>
+                    <p:commandButton styleClass="buttonHeadSelected" id="avancado" icon="fa-home" ajax="false" value="OPÇÕES ADMINISTRATIVAS" action="administradorpage1" rendered="#{Perfil.crud.instance.tipo.equals('ADMINISTRADOR')}" />
+                    
+                </h:form>
+            
+            </h:panelGrid>    
+                
+        </ui:define>
+          
+        <ui:define name="body">
+                
+            <p:outputPanel id="Painel" layout="responsive" styleClass="emailConfirmationPanel">
+
+                <h:form id="cadastroForm">
+
+                    <p:growl />
+
+                    <p:panelGrid  columns="8" styleClass="DialogForm">
+                        
+                        <p:dataTable value="#{Requisicao.buscarRequisicoes()}" var="requisicao" paginator="true" rows="10" resizableColumns="true" resizeMode="expand" >
+
+                            <f:facet name="header">
+                                REQUISIÇÕES DISPONÍVEIS
+                            </f:facet>
+                            
+                            <p:column headerText="id" width="40" resizable="true" >
+                                #{requisicao.id}
+                            </p:column>
+
+                            <p:column headerText="Usuario" width="150" resizable="true">
+                                #{requisicao.usuario.email}
+                            </p:column>
+
+                            <p:column headerText="Perfil" width="150" resizable="true">
+                                #{requisicao.perfil}
+                            </p:column>
+                            
+                            <p:column headerText="Situação" width="130" resizable="true">
+                                #{requisicao.situacao}
+                            </p:column>
+                            
+                            <p:column headerText="Descricao" width="200" resizable="true">
+                                #{requisicao.descricao}
+                            </p:column>
+                            
+                            <p:column headerText="Data de vencimento" width="140" resizable="true">
+                                #{requisicao.dataVencimento}
+                            </p:column>
+                            
+                            <p:column width="130">
+                                <p:commandButton value="Aceitar" update=":aceiteForm:PainelAceita" oncomplete="PF('aceitaDados').show('#{component.clientId}')">
+                                    <f:setPropertyActionListener value="#{requisicao}" target="#{Requisicao.crud.instance}" />
+                                </p:commandButton>
+                            </p:column>
+
+                            <p:column width="130">
+                                <p:commandButton value="Recusar" update=":recusaForm:PainelRecusa" oncomplete="PF('recusaDados').show('#{component.clientId}')">
+                                    <f:setPropertyActionListener value="#{requisicao}" target="#{Requisicao.crud.instance}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:panelGrid>
+
+                    </h:form>  
+                    
+                    <h:form id="aceiteForm">
+                
+                    <p:dialog widgetVar="aceitaDados" showEffect="fade" hideEffect="fade" closable="true">
+            
+                       <p:outputPanel id="PainelAceita" layout="responsive" >
+                   
+                            <p:panelGrid columns="2" styleClass="DialogForm"> 
+
+                            <f:facet name="header">
+                                Painel de Aceitação da Requisição:
+                            </f:facet>    
+                                
+                            <h:outputText value="Id:" />
+                            <h:outputText value="#{Requisicao.crud.instance.id}" />
+
+                            <h:outputText value="Usuario" />
+                            <h:outputText value="#{Requisicao.crud.instance.usuario.email}" />
+
+                            <h:outputText value="Perfil:" />
+                            <h:outputText value="#{Requisicao.crud.instance.perfil.login}" />
+
+                            <h:outputText value="Descricao" />
+                            <h:outputText value="#{Requisicao.crud.instance.descricao}" />    
+                                
+                            <p:outputLabel id="display" for="resposta" value="Resposta:"/>
+                            <p:inputTextarea id="resposta" value="#{Requisicao.crud.instance.resposta}" rows="6" cols="40" counter="display" maxlength="256" counterTemplate="Resposta: {0} caracteres restantes." />
+                            
+                            <f:facet name="footer">
+                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{Requisicao.respondeRequisicao('ACEITO',Perfil.crud.instance)}" onclick="#{Perfil.operacao.operacao.criarPerfil(Requisicao.crud.instance.usuario)}"/>
+                            </f:facet>
+                            
+                            </p:panelGrid>
+
+                        </p:outputPanel>
+            
+                    </p:dialog>
+                    
+                    </h:form>    
+                    <h:form id="recusaForm">    
+                
+                    <p:dialog widgetVar="recusaDados" showEffect="fade" hideEffect="fade" closable="true">
+            
+                        <p:outputPanel id="PainelRecusa" layout="responsive" >
+                   
+                            <p:panelGrid columns="2" styleClass="DialogForm"> 
+
+                            <f:facet name="header">
+                                Painel de Recusa da Requisição:
+                            </f:facet>      
+                                
+                            <h:outputText value="Id:" />
+                            <h:outputText value="#{Requisicao.crud.instance.id}" />
+
+                            <h:outputText value="Usuario" />
+                            <h:outputText value="#{Requisicao.crud.instance.usuario.email}" />
+
+                            <h:outputText value="Perfil:" />
+                            <h:outputText value="#{Requisicao.crud.instance.perfil.login}" />
+
+                            <h:outputText value="Descricao" />
+                            <h:outputText value="#{Requisicao.crud.instance.descricao}" />    
+                                
+                            <p:outputLabel id="display2" for="resposta2" value="Resposta:"/>
+                            <p:inputTextarea id="resposta2" value="#{Requisicao.crud.instance.resposta}" rows="6" cols="40" counter="display2" maxlength="256" counterTemplate="Resposta: {0} caracteres restantes." />
+                            
+                            <f:facet name="footer">
+                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{Requisicao.respondeRequisicao('RECUSADO',Perfil.crud.instance)}" />
+                            </f:facet>
+                            
+                            </p:panelGrid>
+
+                        </p:outputPanel>
+            
+                    </p:dialog>
+                        
+                </h:form>
+                
+            </p:outputPanel>
+              
+        </ui:define>  
+
+      </ui:composition>
+    
+</html>

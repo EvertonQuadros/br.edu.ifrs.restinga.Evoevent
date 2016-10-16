@@ -1,3 +1,24 @@
+/* 
+ * Copyright 2016 notrevequadrosc@gmail.com.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Author:  notrevequadrosc@gmail.com
+ * Created: 09/10/2016
+ */
+
 /*
     Arquivo css padrão onde aplicaremos todas as mudanças comuns a todas nossas
     páginas. mudanças pontuais em determinadas páginas não devem ser realizadas
@@ -7,3 +28,126 @@
     Author     : notrevequadrosc@gmail.com
 */
 
+/*
+    Classe de configuração do cabeçalho da tela no template padrão
+*/
+.headStyle, .headStyle .ui-widget-content{
+    
+    background: gray; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, black, white); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, black, white); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, black, white); /* For Firefox 3.6 to 15 */
+    
+}
+
+/*
+    Classe de configuração do corpo da tela no template padrão
+*/
+.bodyStyle, .bodyStyle .ui-widget-content{
+    
+    background: gray; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(left, black, white); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(left, black, white); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(left, black, white); /* For Firefox 3.6 to 15 */
+    
+}
+
+/*
+    Classe de configuração do cabeçalho da tela no template padrão
+*/
+.footerStyle .ui-widget-content{
+    
+    background: gray;
+    background: -webkit-radial-gradient(30px, black, white); 
+    background: -o-radial-gradient(30px, black, white); 
+    background: -moz-radial-gradient(30px, black, white); 
+    
+}
+
+/*
+    Classe de configuração o texto do rodapé
+*/
+.footerText{
+    
+    position: relative;
+    text-align: center;
+    color: white;
+    font-size: 28px;
+    
+}
+
+/*
+    Classe de configuração do texto para painéis
+*/
+.panelText, .panelText .ui-widget-content{
+    
+    color: white;
+    font-size: 20px;
+    
+}
+
+/*
+    Classe de configuração o texto do corpo
+*/
+.bodyText{
+    
+    position: relative;
+    top:40%;
+    text-align: center;
+    color: white;
+    font-size: 40px;
+    
+}
+
+/*
+    Classe de configuração da altura dos botões do cabeçalho
+*/
+.ui-button.buttonHead, .ui-button.buttonHeadSelected{
+    height: 40px;
+}
+
+/*
+    Classe de configuração da cor botão do cabeçalho selecionado
+*/
+.ui-button.buttonHeadSelected ,ui-button.ui-state-hover.buttonHeadSelected{
+    
+    background: lightgray;
+    color: darkgray;
+    border-color: gray;
+    
+}
+
+/*
+    Classe de configuração do menu de login da tela no template padrão
+*/
+.loginBar, .loginBar .ui-widget-content{
+  
+    position: relative;
+    left: 15%;
+    bottom: -10px;
+    background-color: white;
+    border: black;
+    border-width: 2px;
+    border-spacing: 2px;
+    padding: 3px;
+    font-size: 15px;
+    
+}
+
+/*
+    Classe de configuração do menu das caixas de diálogo.
+*/
+.DialogForm, .DialogForm .ui-widget-content {
+
+    border-width: 2px;
+    border-style: outset;
+
+}
+
+/*
+    Classe do painel de confirmação do email e tabelas de requisições.
+*/
+.emailConfirmationPanel, .emailConfirmationPanel td.ui-panelgrid-cell
+    , .emailConfirmationPanel .ui-datatable-data .ui-widget-content {
+    background: white;
+}
