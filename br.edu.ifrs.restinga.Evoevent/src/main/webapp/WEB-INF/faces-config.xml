@@ -38,9 +38,14 @@ limitations under the License.
         </navigation-case>
         
         <navigation-case>
-        <from-outcome>administradorpage1</from-outcome>    
-        <to-view-id>/resources/pages/administradorpage1.xhtml</to-view-id>   
-        </navigation-case>    
+        <from-outcome>fadministrativa</from-outcome>    
+        <to-view-id>/resources/pages/fadministrativa.xhtml</to-view-id>   
+        </navigation-case>
+        
+        <navigation-case>
+        <from-outcome>perfil1</from-outcome>    
+        <to-view-id>/resources/pages/perfil1.xhtml</to-view-id>   
+        </navigation-case>        
         
     </navigation-rule>
     

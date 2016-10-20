@@ -20,12 +20,13 @@ limitations under the License.
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      >
+          
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     
     <h:head>
         
         <h:outputStylesheet library="css" name="EstiloPadrao.css"/>
-        <title>Evoevent 0.1.0.0 Alpha</title>
+        <title>#{PagesBean.inicializaTitulo()}</title>
         
     </h:head>
     
@@ -34,7 +35,32 @@ limitations under the License.
         <p:layout fullPage="true">
             
             <p:layoutUnit position="north" size="70" styleClass="headStyle">
-                <ui:insert name="head"/>
+                
+                <h:panelGrid columns="4">
+                
+                <h:form>
+
+                    <p:commandButton styleClass="#{PagesBean.buttonSwitch('index')}" ajax="false" value="Home" actionListener="index" />
+                    <!-- <p:commandButton styleClass="buttonHead" ajax="false" value="Buscar Eventos" action="home"/> Desativado até a implementação dos eventos -->
+                    <f:event type="preRenderView" listener="#{Perfil.init()}"/>
+                    
+                </h:form>
+            
+                 <h:form styleClass="loginBar" rendered="#{PagesBean.isIndex()}">
+
+                    <p:outputLabel for="login" />
+                    <p:inputText id="login" label="O login digitado" value="#{Perfil.crud.instance.login}" placeholder="USUÁRIO" size="50" maxlength="100" />
+                    <p:outputLabel for="senha" />
+                    <p:password id="senha" label="A senha digitada"  value="#{Perfil.crud.instance.senha}" placeholder="SENHA" size="30" maxlength="50" />
+                    
+                    <p:commandButton ajax="false" value="Login" action="#{Perfil.operacao.doLogin(Perfil.crud)}"/> 
+                    
+                    <p:commandButton value="Cadastrar-se" update=":Painel" oncomplete="PF('cadastroDialog').show('#{component.clientId}')" />
+
+                </h:form>
+            
+            </h:panelGrid> 
+                
             </p:layoutUnit>
 
             <p:layoutUnit position="center" styleClass="bodyStyle">
@@ -42,7 +68,7 @@ limitations under the License.
             </p:layoutUnit>
             
             <p:layoutUnit position="south" size="100" styleClass="footerStyle">
-                <h2 class="footerText">Evoevent 0.1.0.0 Alpha ----- Eventos Acadêmicos  -  IFRS 2016/2</h2>
+                <h2 class="footerText">#{PagesBean.inicializaRodape()}</h2>
             </p:layoutUnit>
             
         </p:layout>

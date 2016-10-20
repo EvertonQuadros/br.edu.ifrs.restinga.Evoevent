@@ -22,40 +22,11 @@ limitations under the License.
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
       <ui:composition template="resources/templates/TmpIndex.xhtml">
-          
-        <ui:define name="head">
-         
-            <h:panelGrid columns="4">
-                
-                <h:form>
-
-                    <p:commandButton styleClass="buttonHeadSelected" ajax="false" value="Home" actionListener="index" />
-                    <!-- <p:commandButton styleClass="buttonHead" ajax="false" value="Buscar Eventos" action="home"/> Desativado até a implementação dos eventos -->
-                    <f:event type="preRenderView" listener="#{Perfil.init()}"/>
-                    
-                </h:form>
-            
-                <h:form styleClass="loginBar">
-
-                    <p:outputLabel for="login" />
-                    <p:inputText id="login" label="O login digitado" value="#{Perfil.crud.instance.login}" placeholder="USUÁRIO" size="50" maxlength="100" />
-                    <p:outputLabel for="senha" />
-                    <p:password id="senha" label="A senha digitada"  value="#{Perfil.crud.instance.senha}" placeholder="SENHA" size="30" maxlength="50" />
-                    
-                    <p:commandButton ajax="false" value="Login" action="#{Perfil.operacao.doLogin(Perfil.crud)}"/> 
-                    
-                    <p:commandButton value="Cadastrar-se" update=":Painel" oncomplete="PF('cadastroDialog').show('#{component.clientId}')" />
-
-                </h:form>
-            
-            </h:panelGrid>    
-                
-        </ui:define>
-          
+    
         <ui:define name="body">
               
             <h2 class="bodyText">Seja bem vindo!</h2>
-  
+
             <p:dialog header="Formulário de Cadastro" widgetVar="cadastroDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="false" modal="true" appendTo="@(body)">
             
                 <p:outputPanel id="Painel" layout="responsive" >

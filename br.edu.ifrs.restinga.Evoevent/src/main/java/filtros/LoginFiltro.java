@@ -45,7 +45,7 @@ public class LoginFiltro implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         
         HttpServletRequest req = (HttpServletRequest) request;
-        OperacaoPerfil cookie = null;
+        Perfil cookie = null;
         
         boolean redirecionar = false;
         if(!req.getRequestURI().endsWith("/index.xhtml") 
@@ -57,26 +57,25 @@ public class LoginFiltro implements Filter {
             } 
             else {
 
-                cookie = (OperacaoPerfil)sessao.getAttribute("Perfil");
+                cookie = (Perfil)sessao.getAttribute("Perfil");
          
                 if(cookie == null){
-                    redirecionar = true;
-                }
-                else if(!cookie.getOperacao().PerfilLogado(cookie.getCrud())){
                     redirecionar = true;
                 }
                 
             }
             
-            if(req.getRequestURI().endsWith("/administradorpage1.xhtml") 
+            if(req.getRequestURI().endsWith("/fadministrativa.xhtml") 
                     && sessao != null 
-                    && cookie != null
-                    && ((Perfil)cookie.getCrud().getInstance()).getTipo() != null){
+                    && cookie != null){
                 
-                if(!((Perfil)cookie.getCrud().getInstance()).getTipo().equals("ADMINISTRADOR")){
+                if(!(cookie.getTipo().equals("ADMINISTRADOR"))){
+                    
                     redirecionar = true;
                     sessao.setAttribute("message"
                             ,"VOCÊ NÃO TEM PERMISSÕES SUFICIENTES PARA ACESSAR ESTA PÁGINA!");
+                     sessao.setAttribute("Perfil", null);
+                     
                 }
                 
             }

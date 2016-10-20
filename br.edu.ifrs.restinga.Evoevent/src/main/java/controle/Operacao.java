@@ -17,6 +17,7 @@ package controle;
 
 import java.io.Serializable;
 import java.util.UUID;
+import javax.faces.context.FacesContext;
 import modelo.Perfil;
 import modelo.Usuario;
 import modelo.utils.EmailUtil;
@@ -59,6 +60,9 @@ public class Operacao implements Serializable{
             
             crud.setInstance(objeto);
             setOperacao(objeto.getTipo());
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+	    facesContext.getExternalContext().getSessionMap().put("Perfil", objeto);
+            
             return "home";
             
         }
@@ -87,11 +91,13 @@ public class Operacao implements Serializable{
         } 
         catch (IllegalAccessException ex) {
             
-             MessagesUtil.Messages.getCurrentMessage(
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            MessagesUtil.Messages.getCurrentMessage(
                 Perfil.class
                 , "ACESSO INVÁLIDO: "+ ex.getMessage()
                 , MessagesUtil.Messages.OperacaoEnum.ACESSO
                 , MessagesUtil.SeveridadeEnum.FATAL);
+             
              
         }
         
@@ -126,6 +132,8 @@ public class Operacao implements Serializable{
     public String logout(Crud crud) {
         
         crud.setInstance(new Perfil());
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        
         return "index";
         
     }

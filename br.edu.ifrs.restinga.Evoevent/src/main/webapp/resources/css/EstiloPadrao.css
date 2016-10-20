@@ -151,3 +151,39 @@
     , .emailConfirmationPanel .ui-datatable-data .ui-widget-content {
     background: white;
 }
+
+/*
+    Classe do layout lateral na tela do perfil..
+*/
+.layoutwest , .layoutwest .ui-widget-content{
+    
+    background: white;
+    
+}
+
+/*
+    Classe do layout central na tela do perfil.
+*/
+.layoutcenter , .layoutcenter .ui-widget-content{
+    
+    background: lightgray;
+    height: 32%;
+    
+}
+
+/*
+    Classe de configuração da altura dos botões do perfil
+*/
+.ui-button.botaoLateral{
+    width:99%;
+}
+
+/*
+    Classe de configuração dos checkboxes desativados
+*/
+.checkStyle, .checkStyle .ui-chkbox div .ui-state-disabled{
+    
+    background: White;
+    font-weight: bolder;
+    
+}

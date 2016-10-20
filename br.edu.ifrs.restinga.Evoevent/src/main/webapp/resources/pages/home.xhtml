@@ -22,23 +22,6 @@ limitations under the License.
       xmlns:p="http://primefaces.org/ui">
       <ui:composition template="../templates/TmpPadrao.xhtml">
           
-        <ui:define name="head">
-         
-            <h:panelGrid columns="4">
-                
-                <h:form>
-
-                    <p:commandButton styleClass="buttonHeadSelected" ajax="false" value="Home" action="home"/>
-                    <p:commandButton styleClass="buttonHead" id="logoutButton" icon="fa-home" ajax="false" value="Sair" action="#{Perfil.operacao.logout(Perfil.crud)}"/>
-                    <p:commandButton styleClass="buttonHead" id="avancado" icon="fa-home" ajax="false" value="OPÇÕES ADMINISTRATIVAS" action="administradorpage1" rendered="#{Perfil.crud.instance.tipo.equals('ADMINISTRADOR')}" />
-                    
-                    
-                </h:form>
-            
-            </h:panelGrid>    
-                
-        </ui:define>
-          
         <ui:define name="body">
                       
                 <h1>Olá #{Perfil.crud.instance.login}</h1>

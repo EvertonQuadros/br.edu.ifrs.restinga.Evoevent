@@ -25,7 +25,7 @@ limitations under the License.
     <h:head>
         
         <h:outputStylesheet library="css" name="EstiloPadrao.css"/>
-        <title>Evoevent 0.1.0.0 Alpha</title>
+        <title>#{PagesBean.inicializaTitulo()}</title>
         
     </h:head>
     
@@ -34,7 +34,20 @@ limitations under the License.
         <p:layout fullPage="true">
             
             <p:layoutUnit position="north" size="70" styleClass="headStyle">
-                <ui:insert name="head"/>
+                
+                <h:panelGrid>
+                
+                <h:form>
+
+                    <p:commandButton styleClass="#{PagesBean.buttonSwitch('home')}" ajax="false" value="Home" action="home"/>
+                    <p:commandButton styleClass="buttonHead" id="logoutButton" icon="fa-home" ajax="false" value="Sair" action="#{Perfil.operacao.logout(Perfil.crud)}"/>
+                    <p:commandButton styleClass="#{PagesBean.buttonSwitch('fadministrativa')}" id="avancado" icon="fa-home" ajax="false" value="OPÇÕES ADMINISTRATIVAS" action="fadministrativa" rendered="#{Perfil.crud.instance.tipo.equals('ADMINISTRADOR')}" />
+                    <p:commandButton styleClass="#{PagesBean.buttonSwitch('perfil1')}" id="perfil"  ajax="false" value="Meu Perfil" action="perfil1"/>
+                    
+                </h:form>
+            
+                </h:panelGrid>  
+                
             </p:layoutUnit>
             
             <p:layoutUnit position="east" size="175">

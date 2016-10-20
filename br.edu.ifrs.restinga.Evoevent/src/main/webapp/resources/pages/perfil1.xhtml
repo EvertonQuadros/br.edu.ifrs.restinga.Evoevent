@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+     <ui:composition template="../templates/TmpPadrao.xhtml">
+
+        <ui:define name="body">
+                
+            <h:form >
+            
+            <p:outputPanel id="Painel" layout="responsive">
+                    
+                <p:toolbar>
+                         
+                        <f:facet name="left">
+                            
+                            <p:commandButton type="button" value="Meu Perfil"  />
+                            
+                            <span class="ui-separator">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                            </span>
+                                
+                            <p:commandButton type="button" value="Meus Eventos" />
+
+                            <span class="ui-separator">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                            </span>
+
+                            <p:commandButton type="button" value="Meus Contatos" />
+    
+                            <span class="ui-separator">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                            </span>    
+                            
+                        </f:facet>
+
+                        <f:facet name="right">
+                            
+                        <p:commandButton type="button" value="Mensagens" />
+                        <p:commandButton type="button" value="Notificações" />
+                        <p:commandButton type="button" value="Requisições" />
+                        
+                        </f:facet>
+ 
+                </p:toolbar>
+                    
+                 </p:outputPanel>
+                
+            </h:form>
+                
+                <p:growl />
+
+                    <h:form id="cadastroForm">
+
+                        <p:layout >
+                            
+                        <p:layoutUnit position="west" size="15%" styleClass="layoutwest">
+                            
+                            <f:facet name="header">
+                                <p:graphicImage library="images" name="imagetest.jpg" height="10%" width="99%" />
+                            </f:facet>
+                            
+                            <p:commandButton styleClass="botaoLateral" type="button" value="Perfil Público" />
+                            <p:commandButton styleClass="botaoLateral" type="button" value="Informações Pessoais" />
+                            <p:commandButton styleClass="botaoLateral" type="button" value="Trabalhos Submetidos" />
+                            <p:commandButton styleClass="botaoLateral" type="button" value="Preferências" />
+
+                            <p:scrollPanel mode="native" style="width:99%;height:20%">
+                                
+                                <p:panel header="Meus contatos">
+                                
+                                Em breve
+                                </p:panel>
+                                
+                            </p:scrollPanel>
+                            
+                        </p:layoutUnit>
+
+                        <p:layoutUnit position="center" styleClass="layoutcenter">
+                            
+                            <p:tabView orientation="left" styleClass="layoutcenter">
+                        
+                                <p:tab title="Geral" >
+
+                                    <p:panelGrid columns="2" layout="grid" styleClass="DialogForm">
+                                        
+                                        <f:facet name="header">
+                                            Informações Gerais
+                                        </f:facet>
+                                        
+                                        <p:outputLabel for="nome:" value="Nome:" />
+                                        <p:inputText id="nome" label="O nome do usuário" value="#{PerfilBean.usuario.nome}" size="50" readonly="true"/>
+                                        
+                                        <p:outputLabel for="email:" value="Email:" />
+                                        <p:inputText id="email" label="Email do usuário" value="#{PerfilBean.usuario.email}" size="50" readonly="true"/>
+             
+                                        <p:outputLabel for="dataNasc" value="Data de Nascimento: "/>
+                                        <p:calendar id="dataNasc" value="#{PerfilBean.usuario.dataNasc}" pattern="dd-MM-yyyy" placeholder="__-__-____" mask="true" readonly="true" />
+                                            
+                                        <p:outputLabel for="sexo" value="Sexo: "/>
+                                        <p:inputText id="sexo" label="O sexo do usuário" value="#{PerfilBean.sexo}" size="50" readonly="true"/>
+                                        
+                                        <p:outputLabel for="estado:" value="Estado:" />
+                                        <p:inputText id="estado" label="Estado do usuário" value="#{PerfilBean.usuario.estado.nome}" size="50" readonly="true"/>
+                                        
+                                        <p:outputLabel for="cidade:" value="Cidade:" />
+                                        <p:inputText id="cidade" label="Cidade do usuário" value="#{PerfilBean.usuario.cidade.nome}" size="50" readonly="true"/>
+                                        
+                                        <p:outputLabel for="instituicao:" value="Instituição:" />
+                                        <p:inputText id="instituicao" label="Instituicao do usuário" value="#{PerfilBean.usuario.instituicao}" size="40" readonly="true"/>
+                                        
+                                        <p:outputLabel for="instrucao:" value="Instrução:" />
+                                        <p:inputText id="instrucao" label="Instrucao do usuário" value="#{PerfilBean.usuario.instrucao}" size="40" readonly="true"/>
+                                        
+                                        <p:outputLabel for="profissao:" value="Profissão:" />
+                                        <p:inputText id="profissao" label="Profissão do usuário" value="#{PerfilBean.usuario.profissao}" size="40" readonly="true"/>
+                                        
+                                        <p:outputLabel for="interesse" value="Áreas de Interesse:"/>
+                                        <p:selectManyCheckbox id="interesse" value="#{PerfilBean.usuario.interesse}" layout="grid" columns="3" styleClass="checkStyle" disabled="true">
+                                            <f:selectItems value="#{PerfilBean.usuario.interesse}" var="interesse" itemLabel="#{interesse}" itemValue="#{interesse}" />
+                                        </p:selectManyCheckbox>
+                                        
+                                        <p:outputLabel  for="descricao" value="Descrição:"/>
+                                        <p:inputTextarea id="descricao" value="#{PerfilBean.usuario.descricao}" rows="6" cols="40" readonly="true"/>
+                                        
+                                    </p:panelGrid>
+
+                                </p:tab>
+
+                                <p:tab title="Acadêmico" >
+
+                                    <p:panel header="Informações acadêmicas">
+                                    
+                                        <h:outputText 
+                                            value="em breve..." />
+                                        
+                                    </p:panel>
+
+                                </p:tab>
+
+                            </p:tabView>
+                            
+                        </p:layoutUnit>
+             
+                        </p:layout>
+     
+                    </h:form>
+                
+            </ui:define>  
+    
+      </ui:composition>
+    
+</html>

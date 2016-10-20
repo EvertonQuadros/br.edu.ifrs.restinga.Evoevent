@@ -117,7 +117,7 @@ public class MessagesUtil {
   
     }
     
-    public static class Messages{
+    public static class Messages extends MessagesUtil{
         
         /**
          * Tipo de enumeradores que representam operações do sistema:

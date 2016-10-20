@@ -17,10 +17,10 @@ package controle;
 
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import modelo.Perfil;
 import modelo.utils.MessagesUtil;
 
@@ -29,7 +29,7 @@ import modelo.utils.MessagesUtil;
  * acordo com o tipo de perfil da instância do atributo operacao;
  * @author notrevequadrosc@gmail.com
  */
-@ManagedBean(name="Perfil")
+@Named("Perfil")
 @SessionScoped
 public class OperacaoPerfil implements Serializable{
     
@@ -56,6 +56,19 @@ public class OperacaoPerfil implements Serializable{
                    ,MessagesUtil.Messages.OperacaoEnum.ACESSO
                    ,MessagesUtil.SeveridadeEnum.ERRO);
         }
+        
+    }
+    
+    /**
+     * Método que retornar o objeto do perfil autenticado no sistema
+     * @return Objeto Entidade do tipo Perfil correspondente aos dados do perfil
+     * autenticado
+     */
+    public Perfil GetPerfilSession(){
+ 
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+ 
+	return (Perfil)facesContext.getExternalContext().getSessionMap().get("Perfil");
         
     }
     
