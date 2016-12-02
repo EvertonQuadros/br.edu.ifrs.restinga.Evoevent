@@ -43,15 +43,19 @@ limitations under the License.
                                 #{requisicao.id}
                             </p:column>
 
-                            <p:column headerText="Usuario" width="150" resizable="true">
+                            <p:column headerText="Titulo" width="150" resizable="true">
+                                #{requisicao.titulo}
+                            </p:column>
+                            
+                            <p:column headerText="Usuario" width="120" resizable="true">
                                 #{requisicao.usuario.email}
                             </p:column>
 
-                            <p:column headerText="Perfil" width="150" resizable="true">
-                                #{requisicao.perfil}
+                            <p:column headerText="Perfil" width="80" resizable="true">
+                                #{requisicao.perfil.login}
                             </p:column>
                             
-                            <p:column headerText="Situação" width="130" resizable="true">
+                            <p:column headerText="Situação" width="80" resizable="true">
                                 #{requisicao.situacao}
                             </p:column>
                             
@@ -59,7 +63,7 @@ limitations under the License.
                                 #{requisicao.descricao}
                             </p:column>
                             
-                            <p:column headerText="Data de vencimento" width="140" resizable="true">
+                            <p:column headerText="Data de vencimento" width="120" resizable="true">
                                 #{requisicao.dataVencimento}
                             </p:column>
                             
@@ -105,11 +109,11 @@ limitations under the License.
                             <h:outputText value="Descricao" />
                             <h:outputText value="#{Requisicao.crud.instance.descricao}" />    
                                 
-                            <p:outputLabel id="display" for="resposta" value="Resposta:"/>
+                            <p:outputLabel id="display" for="resposta" value="Resposta:" />
                             <p:inputTextarea id="resposta" value="#{Requisicao.crud.instance.resposta}" rows="6" cols="40" counter="display" maxlength="256" counterTemplate="Resposta: {0} caracteres restantes." />
                             
                             <f:facet name="footer">
-                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{Requisicao.respondeRequisicao('ACEITO',Perfil.crud.instance)}" onclick="#{Perfil.operacao.operacao.criarPerfil(Requisicao.crud.instance.usuario)}"/>
+                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{RequisicaoBean.respondeRequisicao(Requisicao, 'ACEITO')}" />
                             </f:facet>
                             
                             </p:panelGrid>
@@ -147,7 +151,7 @@ limitations under the License.
                             <p:inputTextarea id="resposta2" value="#{Requisicao.crud.instance.resposta}" rows="6" cols="40" counter="display2" maxlength="256" counterTemplate="Resposta: {0} caracteres restantes." />
                             
                             <f:facet name="footer">
-                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{Requisicao.respondeRequisicao('RECUSADO',Perfil.crud.instance)}" />
+                                <p:commandButton ajax="false" transient="true" value="Enviar" action="#{RequisicaoBean.respondeRequisicao(Requisicao, 'RECUSADO')}" />
                             </f:facet>
                             
                             </p:panelGrid>

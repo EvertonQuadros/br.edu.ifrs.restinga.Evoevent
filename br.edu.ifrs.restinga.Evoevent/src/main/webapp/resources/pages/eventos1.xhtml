@@ -1,0 +1,352 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright 2016 notrevequadrosc@gmail.com.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+     <ui:composition template="../templates/TmpProfile.xhtml">
+
+        <ui:define name="body">
+                
+            <h:form >
+            
+            <p:outputPanel id="Painel" layout="responsive">
+                    
+                    <p:toolbar>
+
+                            <f:facet name="right">
+
+                                <p:commandButton type="button" value="Mensagens" />
+                                <p:commandButton type="button" value="Notificações" />
+
+                                <p:commandButton type="button" value="Requisições" update=":requisicoesForm:PainelRequisicoes" onclick="PF('requisicoesDados').show('#{component.clientId}')" />
+
+                            </f:facet>
+
+                    </p:toolbar>
+
+                </p:outputPanel>
+                
+            </h:form>
+                
+                <p:growl />
+
+                        <p:layout >
+                            
+                        <p:layoutUnit position="west" size="15%" styleClass="layoutwest">
+                            
+                            <f:facet name="header">
+                                <p:graphicImage library="images" name="imagetest.jpg" />
+                            </f:facet>
+                            
+                            <h:form>
+
+                                <p:commandButton styleClass="botaoLateral" type="button" value="Perfil Público" />
+                                <p:commandButton styleClass="botaoLateral" type="button" value="Informações Pessoais" />
+                                <p:commandButton styleClass="botaoLateral" type="button" value="Trabalhos Submetidos" />
+                                <p:commandButton styleClass="botaoLateral" type="button" value="Preferências" />
+
+                            </h:form>
+                            
+                            <p:scrollPanel mode="native" style="width:99%;height:20%">
+                                
+                                <p:panel header="Meus contatos">
+                                
+                                Em breve
+                                </p:panel>
+                                
+                            </p:scrollPanel>
+                            
+                        </p:layoutUnit>
+
+                        <p:layoutUnit position="center" styleClass="layoutcenter">
+                            
+                            <p:tabView orientation="left" styleClass="layoutcenter">
+                        
+                                <p:ajax event="tabChange" listener="#{EventoBean.onTabChange}" update="novoEventoForm" />
+                                
+                                <p:tab title="Eventos" id="eventosTab">
+
+                                    <h:form >
+                                    
+                                    <p:panelGrid columns="2"  styleClass="DialogForm">
+                                        
+                                        <f:facet name="header">
+                                            MEUS EVENTOS
+                                        </f:facet>
+        
+                                        <p:dataTable value="#{Inscricao.buscarInscricoesFiltro(Perfil.crud.instance)}" var="inscricao" paginator="true" rows="10" resizableColumns="true">
+
+                                            <p:column headerText="Evento" width="100" resizable="true">
+                                                #{inscricao.evento.nomeEvento}
+                                            </p:column>
+
+                                            <p:column headerText="Estado" width="100" resizable="true">
+                                                #{inscricao.evento.estado.nome}
+                                            </p:column>
+
+                                            <p:column headerText="Cidade" width="90" resizable="true">
+                                                #{inscricao.evento.cidade.nome}
+                                            </p:column>
+
+                                            <p:column headerText="Local " width="150" resizable="true">
+                                                #{inscricao.evento.localEvento}
+                                            </p:column>
+
+                                            <p:column headerText="Data de início" width="100" resizable="true">
+                                                #{inscricao.evento.dataHoraInicio}
+                                            </p:column>
+
+                                            <p:column headerText="Data de término" width="100" resizable="true">
+                                                #{inscricao.evento.dataHoraTermino}
+                                            </p:column>    
+  
+                                            <p:column width="130">
+                                                
+                                                <p:commandButton value="Mais Detalhes" update=":eventoForm:PainelEvento" onclick="PF('eventoDados').show('#{component.clientId}')">
+                                                    <f:setPropertyActionListener value="#{inscricao}" target="#{Inscricao.crud.instance}" />
+                                                </p:commandButton>
+                                                
+                                            </p:column>    
+
+                                        </p:dataTable>
+                                        
+                                    </p:panelGrid>
+
+                                    </h:form>        
+                                        
+                                </p:tab>
+
+                                <p:tab title="Agendar Eventos" id="agendarEventosTab" rendered="#{Perfil.crud.instance.tipo.equals('GERENTE DE EVENTOS') || Perfil.crud.instance.tipo.equals('ADMINISTRADOR')}" >
+                                    
+                                    <p:panel header="Novo Evento">
+                                            
+                                        <h:form id="novoEventoForm">
+                                        
+                                            <p:panelGrid columns="2" styleClass="DialogForm" >
+                                            
+                                                <f:facet name="header">
+                                                Informações Gerais:
+                                                </f:facet>
+                                                
+                                                <p:outputLabel for="nome" value="Nome do Evento:" />
+                                                <p:inputText id="nome" label="O nome digitado" value="#{EventoBean.evento.nomeEvento}" placeholder="Nome" size="50" maxlength="100" required="true" />
+                                                
+                                                <p:outputLabel for="estado" value="Estado:"/>
+                                                <p:selectOneMenu id="estado" value="#{EventoBean.evento.estado}" required="true" converter="#{Estado.converter}" effect="fade" filter="true" filterMatchMode="startsWith">
+                                                    <p:ajax update="cidade" process="@this" listener="#{EventoBean.setLista(EventoBean.evento.estado)}"  /> 
+                                                    <f:selectItem itemLabel="Selecione o Estado" itemValue="0" noSelectionOption="true" />
+                                                    <f:selectItems value="#{Estado.crud.lista}" var="estados" itemLabel="#{estados.sigla}" itemValue="#{estados}"/>
+                                                </p:selectOneMenu>
+                                                        
+                                                <p:outputLabel for="cidade" value="Cidade:"/>
+                                                <p:selectOneMenu id="cidade" value="#{EventoBean.evento.cidade}" required="true" converter="#{EventoBean.converter}" effect="fade" filter="true" filterMatchMode="startsWith">
+                                                    <f:selectItem itemLabel="Selecione a cidade" itemValue="0" noSelectionOption="true" />
+                                                    <f:selectItems value="#{EventoBean.crud.lista}" var="cidades" itemLabel="#{cidades.nome}" itemValue="#{cidades}" />
+                                                </p:selectOneMenu>   
+                                                
+                                                <p:outputLabel for="local" value="Endereço:" />
+                                                <p:inputText id="local" label="O endereço digitado" value="#{EventoBean.evento.localEvento}" placeholder="local" size="50" maxlength="100" required="true" />
+          
+                                            </p:panelGrid>
+                                            
+                                            <p:panelGrid columns="2" styleClass="DialogForm">
+                                                
+                                                <f:facet name="header">
+                                                    Detalhes:
+                                                </f:facet>    
+
+                                                    <p:outputLabel for="dataInicio" value="Data de Início: "/>
+                                                    <p:calendar id="dataInicio" value="#{EventoBean.evento.dataHoraInicio}" pattern="dd-MM-yyyy HH:mm" placeholder="__-__-____ __:__" mask="true" required="true" mindate="#{EventoBean.dataMin}" />
+
+                                                    <p:outputLabel for="dataTermino" value="Data de Término: "/>
+                                                    <p:calendar id="dataTermino" value="#{EventoBean.evento.dataHoraTermino}" pattern="dd-MM-yyyy HH:mm" placeholder="__-__-____ __:__" mask="true" required="true" mindate="#{EventoBean.dataMin}" /> 
+
+                                                    <p:outputLabel for="area" value="Áreas do evento:"/>
+                                                    <p:selectManyCheckbox id="area" value="#{EventoBean.evento.area}" layout="grid" columns="3" required="true">
+                                                        <f:selectItems value="#{EventoBean.areas}" var="areas" itemLabel="#{areas}" itemValue="#{areas}" />
+                                                    </p:selectManyCheckbox>
+
+                                                    <p:outputLabel id="display" for="descricao" value="Descrição:"/>
+                                                    <p:inputTextarea id="descricao" value="#{EventoBean.evento.descricao}" rows="6" cols="40" counter="display" maxlength="256" counterTemplate="Descrição: {0} caracteres restantes." />
+
+                                                <f:facet name="footer">
+                                                    <p:commandButton ajax="false" value="Agendar Evento" actionListener="#{EventoBean.salvar()}" /> 
+                                                </f:facet>
+                                            
+                                            </p:panelGrid>
+                                        
+                                        </h:form >    
+                                            
+                                    </p:panel>
+
+                                </p:tab>
+
+                            </p:tabView>
+                            
+                        </p:layoutUnit>
+             
+                        </p:layout>
+                
+                    <h:form id="requisicoesForm">
+
+                    <p:dialog widgetVar="requisicoesDados" showEffect="fade" hideEffect="fade" closable="true" width="80%" height="50%">
+
+                    <p:outputPanel id="PainelRequisicoes" layout="responsive" styleClass="emailConfirmationPanel">
+
+                        <p:panelGrid columns="2" styleClass="DialogForm">  
+
+                            <p:commandButton type="button" value="Nova Requisição" update=":painelNovaRequisicao" onclick="PF('novaRequisicaoDialog').show('#{component.clientId}')" />    
+                            
+                            <f:facet name="header">
+                                Minhas Requisições:
+                            </f:facet>    
+                            
+                            <p:dataTable value="#{Requisicao.buscarRequisicoesPerfil()}" var="requisicao" paginator="true" rows="10" resizableColumns="true" resizeMode="expand" >
+                            
+                            <p:column headerText="id" width="40" resizable="true" >
+                                #{requisicao.id}
+                            </p:column>
+
+                            <p:column headerText="Usuario" width="100" resizable="true">
+                                #{requisicao.usuario.email}
+                            </p:column>
+
+                            <p:column headerText="Perfil" width="100" resizable="true">
+                                #{requisicao.perfil}
+                            </p:column>
+                            
+                            <p:column headerText="Situação" width="90" resizable="true">
+                                #{requisicao.situacao}
+                            </p:column>
+                            
+                            <p:column headerText="Descricao" width="150" resizable="true">
+                                #{requisicao.descricao}
+                            </p:column>
+                            
+                            <p:column headerText="Data de vencimento" width="100" resizable="true">
+                                #{requisicao.dataVencimento}
+                            </p:column>
+                                
+                            <p:column width="130">
+                                <p:commandButton type="button" value="Responder">
+                                    <!-- <f:setPropertyActionListener value="#{requisicao}" target="#{Requisicao.crud.instance}" /> -->
+                                </p:commandButton>
+                            </p:column>    
+
+                        </p:dataTable>
+
+                        </p:panelGrid>
+
+                    </p:outputPanel>
+            
+                    </p:dialog>
+                    
+                    </h:form>
+                
+                    <p:dialog header="Nova Requisição" widgetVar="novaRequisicaoDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="false" modal="true" appendTo="@(body)" width="300" height="300">
+            
+                    <p:outputPanel id="painelNovaRequisicao" layout="responsive" >
+                    
+                    <h:form id="novaRequisicaoForm">
+                    
+                        <p:growl  id="message" />
+                        
+                        <p:panelGrid  columns="1" styleClass="DialogForm" layout="grid">
+
+                            <p:megaMenu >
+ 
+                            <p:submenu label="Tipo de Requisição" >
+
+                                <p:column>
+                                    
+                                    <p:submenu label="Promoção:">
+                                        
+                                        <p:menuitem value="Revisor de Trabalhos" update="message" actionListener="#{Requisicao.setPromocaoRevisor()}" />
+                                        <p:menuitem value="Gerente de Trabalhos" update="message" actionListener="#{Requisicao.setPromocaoGerente()}" />
+                                        
+                                    </p:submenu>
+                                
+                                </p:column>
+
+                            </p:submenu>
+ 
+                            </p:megaMenu>
+   
+                            <f:facet name="footer">
+                                <p:commandButton ajax="false" value="Enviar" actionListener="#{Requisicao.requisitaPromocao()}" onsuccess="novaRequisicaoDialog.hide()"/>
+                            </f:facet>
+
+                        </p:panelGrid>
+
+                   </h:form>      
+                        
+                </p:outputPanel>
+            
+                </p:dialog>
+                
+                <h:form id="eventoForm">
+                
+                <p:dialog widgetVar="eventoDados" showEffect="fade" hideEffect="fade" closable="true" resizable="true" width="50%" height="50%" styleClass="emailConfirmationPanel">
+
+                   <p:outputPanel id="PainelEvento" layout="responsive" >
+
+                        <p:panelGrid columns="2" styleClass="DialogForm"> 
+
+                        <f:facet name="header">
+                            <h:outputText value="#{Inscricao.crud.instance.evento.nomeEvento}" />
+                        </f:facet>    
+
+                        <h:outputText value="Estado:" />
+                        <h:outputText value="#{Inscricao.crud.instance.evento.estado.nome}" />
+
+                        <h:outputText value="Cidade:" />
+                        <h:outputText value="#{Inscricao.crud.instance.evento.cidade.nome}" />
+
+                        <h:outputText value="Local:" />
+                        <h:outputText value="#{Inscricao.crud.instance.evento.localEvento}" />
+
+                        <p:outputLabel for="dataInicio" value="Data de Início: "/>
+                        <p:calendar id="dataInicio" value="#{Inscricao.crud.instance.evento.dataHoraInicio}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+
+                        <p:outputLabel for="dataTermino" value="Data de Término: "/>
+                        <p:calendar id="dataTermino" value="#{Inscricao.crud.instance.evento.dataHoraTermino}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+
+                        <p:outputLabel for="area" value="Áreas do evento:"/>
+                        <p:selectManyCheckbox id="area" value="#{Inscricao.crud.instance.evento.area}" layout="grid" columns="3" required="true" styleClass="checkStyle" disabled="true">
+                            <f:selectItems value="#{Inscricao.crud.instance.evento.area}" var="areas" itemLabel="#{areas}" itemValue="#{areas}" />
+                        </p:selectManyCheckbox>
+
+                        <p:outputLabel  for="descricao" value="Descrição:"/>
+                        <p:inputTextarea id="descricao" value="#{Inscricao.crud.instance.evento.descricao}" rows="6" cols="40" readonly="true"/>
+
+                        </p:panelGrid>
+
+                    </p:outputPanel>
+
+                </p:dialog>
+
+            </h:form> 
+                
+            </ui:define>  
+    
+      </ui:composition>
+    
+</html>

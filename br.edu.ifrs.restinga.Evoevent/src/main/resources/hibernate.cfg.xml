@@ -27,6 +27,8 @@
     <mapping class="modelo.Estado"/>
     <mapping class="modelo.Perfil"/>
     <mapping class="modelo.Requisicao"/>
+    <mapping class="modelo.Evento"/>
+    <mapping class="modelo.Inscricao"/>
   
   </session-factory>
   

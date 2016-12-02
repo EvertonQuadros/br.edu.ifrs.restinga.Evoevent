@@ -19,6 +19,8 @@ import java.io.Serializable;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import modelo.Perfil;
+import modelo.utils.MessagesUtil;
 
 /**
  * Classe que realiza operações de visão nas telas do projeto, mais especificamente
@@ -77,6 +79,16 @@ public class PagesViewBean implements Serializable{
             return "buttonHead";
         }
         
+    }
+    
+    /**
+     * Método auxiliar que exibe a mensagem na tela.
+     */
+    public void getMessage(){
+        MessagesUtil.Messages.getCurrentMessage(Perfil.class
+                , "VOCÊ DEVE REALIZAR O LOGIN PARA ACESSAR ESTA OPÇÃO!"
+                , MessagesUtil.Messages.OperacaoEnum.ACESSO
+                , MessagesUtil.SeveridadeEnum.ERRO);
     }
     
 }

@@ -16,8 +16,11 @@
 package controle;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.UUID;
 import javax.faces.context.FacesContext;
+import modelo.Evento;
+import modelo.Inscricao;
 import modelo.Perfil;
 import modelo.Usuario;
 import modelo.utils.EmailUtil;
@@ -82,9 +85,9 @@ public class Operacao implements Serializable{
         
         try {
             
-           if(operacoes == null){
-           throw new IllegalAccessException("PERMISSÃO DE ACESSO INSUFICIENTES!");
-           }
+            if(operacoes == null){
+                throw new IllegalAccessException("PERMISSÃO DE ACESSO INSUFICIENTES!");
+            }
         
             return operacoes;
             
@@ -98,7 +101,6 @@ public class Operacao implements Serializable{
                 , MessagesUtil.Messages.OperacaoEnum.ACESSO
                 , MessagesUtil.SeveridadeEnum.FATAL);
              
-             
         }
         
         return null;
@@ -111,10 +113,10 @@ public class Operacao implements Serializable{
             case "ADMINISTRADOR":
                 operacoes = new OperacaoAdministrador();
                 break;
-            case "GERENTE":
+            case "GERENTE DE EVENTOS":
                 operacoes = new OperacaoGerenteEventos();
                 break;
-            case "REVISOR":
+            case "REVISOR DE EVENTOS":
                 operacoes = new OperacaoRevisorEventos();
                 break;
             default:
@@ -154,33 +156,61 @@ public class Operacao implements Serializable{
         public class OperacaoAdministrador extends OperacaoGerenteEventos 
                 implements Serializable{
 
-            public void criarPerfil(Usuario usuario){
+        /**
+         * Método que cria um novo perfil no sistema, referente a um usuário
+         * previamente cadastrado. O login e a senha deste usuário é gerado pelo
+         * sistema.
+         * @param usuario Objeto relativo ao usuário na qual o perfil pertence.
+         */
+        public void criarPerfil(Usuario usuario){
                 
-                if(usuario != null){
+            if(usuario != null){
 
-                Crud crud = new Crud(Perfil.class, new Perfil());
-                String senha = String.valueOf(String.valueOf(
-                        UUID.randomUUID())
-                        .replaceAll("-", "")
-                        .substring(5,17));
+            Crud crud = new Crud(Perfil.class, new Perfil());
+            String senha = String.valueOf(String.valueOf(
+                    UUID.randomUUID())
+                    .replaceAll("-", "")
+                    .substring(5,17));
+
+            ((Perfil)crud.getInstance()).setLogin(usuario.getEmail());
+            ((Perfil)crud.getInstance()).setSenha(senha);
+            ((Perfil)crud.getInstance()).setTipo("PADRAO");
+            ((Perfil)crud.getInstance()).setUsuario(usuario);
+
+            crud.salvar();
+
+            EmailUtil.Email.enviaEmail(usuario.getEmail()
+                ,"NO-REPLY: Suas credenciais do Evoevent"
+                ,"Seja bem vindo ao Evoevent, plataforma de "
+                        +"eventos acadêmicos, essas são suas credênciais"
+                        +" provisórias\nLogin: "+usuario.getEmail()+"\nSenha: "
+                        +senha+"\n\nEMAIL GERADO AUTOMATICAMENTE, NÃO RESPONDA.");
+            }
+
+        }
+     
+        /**
+         * Método administrativo reference a edição das permissões de um usuário.
+         * @param perfil Objeto Perfil que receberá a alteração das permissões.
+         * @param promocao Objeto String referente ao tipo de promoção:
+         * GERENTE DE EVENTOS
+         * REVISOR DE EVENTOS
+         */
+        public void adicionarPromocao(Perfil perfil, String promocao){
                 
-                ((Perfil)crud.getInstance()).setLogin(usuario.getEmail());
-                ((Perfil)crud.getInstance()).setSenha(senha);
-                ((Perfil)crud.getInstance()).setTipo("PADRAO");
-                ((Perfil)crud.getInstance()).setUsuario(usuario);
+                Crud crud = new Crud(Perfil.class, perfil);
                 
-                crud.salvar();
-                
-                EmailUtil.Email.enviaEmail(usuario.getEmail()
-                    ,"NO-REPLY: Suas credenciais do Evoevent"
-                    ,"Seja bem vindo ao Evoevent, plataforma de "
-                            +"eventos acadêmicos, essas são suas credênciais"
-                            +" provisórias\nLogin: "+usuario.getEmail()+"\nSenha: "
-                            +senha+"\n\nEMAIL GERADO AUTOMATICAMENTE, NÃO RESPONDA.");
+                if(promocao.equals("PROMOVER_GERENTE")){
+                    ((Perfil)crud.getInstance()).setTipo("GERENTE DE EVENTOS");
+                }
+                else{
+                    ((Perfil)crud.getInstance()).setTipo("REVISOR DE EVENTOS");
                 }
                 
+                crud.atualizar();
+                
             }
-     
+            
         }
 
         /**
@@ -190,8 +220,31 @@ public class Operacao implements Serializable{
         public class OperacaoGerenteEventos extends OperacaoRevisorEventos 
                 implements Serializable{
 
-            public String testeGerente(){
-                return null;
+        /**
+         * Método de classe interna do gerente de eventos responsável por 
+         * cadastrar um novo evento no sistema e realiza uma inscricao do 
+         * gerente como administrador do evento.
+         * @param evento o evento criado a partir do preenchimento do formulário.
+         */
+        public void agendarNovoEvento(Evento evento){
+                
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                Perfil perfil = (Perfil)facesContext.getExternalContext().getSessionMap().get("Perfil");
+                
+                Crud crud = new Crud(Evento.class, new Evento());
+                crud.setInstance(evento);
+                crud.salvar();
+                
+                crud = new Crud(Inscricao.class, new Inscricao());
+                
+                Inscricao inscricao = new Inscricao();
+                inscricao.setDataInscricao(new Date());
+                inscricao.setEvento(evento);
+                inscricao.setPerfil(perfil);
+                inscricao.setTipoInscricao("GERENTE DE EVENTO");
+                crud.setInstance(inscricao);
+                crud.salvar();
+                
             }
 
         }

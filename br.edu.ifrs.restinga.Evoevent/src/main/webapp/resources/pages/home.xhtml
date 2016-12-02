@@ -19,14 +19,124 @@ limitations under the License.
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
       <ui:composition template="../templates/TmpPadrao.xhtml">
           
         <ui:define name="body">
                       
-                <h1>Olá #{Perfil.crud.instance.login}</h1>
-                <h2 class="bodyText">Em breve...</h2>
+        <h:form>
+                
+            <p:dataGrid var="evento" value="#{Evento.buscarEventosExclusivo()}" columns="3" layout="grid"
+                        rows="12" paginator="true" id="eventosGrid" paginatorAlwaysVisible="false"
+            paginatorTemplate="{CurrentPageReport}  
+                                {FirstPageLink} 
+                                {PreviousPageLink} 
+                                {PageLinks} 
+                                {NextPageLink} 
+                                {LastPageLink} 
+                                {RowsPerPageDropdown}"
+            rowsPerPageTemplate="6,12,16">
+
+                <f:facet name="header">
+                    Eventos Disponíveis
+                </f:facet>
+
+                    <p:panel header="#{evento.nomeEvento}" style="text-align:center" styleClass="emailConfirmationPanel">
+                        
+                        <h:panelGrid columns="1" style="width:100%" styleClass="emailConfirmationPanel">
+                            <h:outputText value="#{evento.cidade.nome},#{evento.estado.sigla}" />
+                            <h:outputText value="#{evento.dataHoraInicio}" />
+                            <h:outputText value="#{evento.localEvento}" />
+                            <h:outputText value="#{evento.descricao}" />
+                            
+                            <p:commandButton value="Mais Detalhes" update=":eventoForm:PainelEvento" onclick="PF('eventoDados').show('#{component.clientId}')">
+                                <f:setPropertyActionListener value="#{evento}" target="#{Evento.crud.instance}" />
+                            </p:commandButton>
+                            
+                        </h:panelGrid>
+                        
+                    </p:panel>
+ 
+                </p:dataGrid>
+                
+            </h:form> 
+            
+            <h:form id="eventoForm">
+                
+                <p:dialog widgetVar="eventoDados" showEffect="fade" hideEffect="fade" closable="true" resizable="true" width="50%" height="50%" styleClass="emailConfirmationPanel">
+
+                   <p:outputPanel id="PainelEvento" layout="responsive" >
+
+                        <p:panelGrid columns="2" styleClass="DialogForm"> 
+
+                        <f:facet name="header">
+                            <h:outputText value="#{Evento.crud.instance.nomeEvento}" />
+                        </f:facet>    
+              
+                        <h:outputText value="Estado:" />
+                        <h:outputText value="#{Evento.crud.instance.estado.nome}" />
+
+                        <h:outputText value="Cidade:" />
+                        <h:outputText value="#{Evento.crud.instance.cidade.nome}" />
+                        
+                        <h:outputText value="Local:" />
+                        <h:outputText value="#{Evento.crud.instance.localEvento}" />
+                        
+                        <p:outputLabel for="dataInicio" value="Data de Início: "/>
+                        <p:calendar id="dataInicio" value="#{Evento.crud.instance.dataHoraInicio}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+                        
+                        <p:outputLabel for="dataTermino" value="Data de Término: "/>
+                        <p:calendar id="dataTermino" value="#{Evento.crud.instance.dataHoraTermino}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+                        
+                        <p:outputLabel for="area" value="Áreas do evento:"/>
+                        <p:selectManyCheckbox id="area" value="#{Evento.crud.instance.area}" layout="grid" columns="3" required="true" styleClass="checkStyle" disabled="true">
+                            <f:selectItems value="#{Evento.crud.instance.area}" var="areas" itemLabel="#{areas}" itemValue="#{areas}" />
+                        </p:selectManyCheckbox>
+                        
+                        <p:outputLabel  for="descricao" value="Descrição:"/>
+                        <p:inputTextarea id="descricao" value="#{Evento.crud.instance.descricao}" rows="6" cols="40" readonly="true"/>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton type="button" value="Realizar Inscrição" update=":painelNovaInscricao" onclick="PF('novaInscricaoDialog').show('#{component.clientId}')" />
+                        </f:facet>
+                        
+                        </p:panelGrid>
+
+                    </p:outputPanel>
+
+                </p:dialog>
+             
+            </h:form>          
         
+               <p:dialog header="Nova Inscricao" widgetVar="novaInscricaoDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="true" modal="true" appendTo="@(body)" width="30%" height="30%">
+            
+                    <p:outputPanel id="painelNovaInscricao" layout="responsive" >
+                    
+                    <h:form >
+                    
+                        <p:growl />
+                        
+                        <p:panelGrid  columns="2" styleClass="DialogForm" >
+
+                            <p:outputLabel for="tipoInscricao" value="Tipo da Inscrição: "/> 
+                            <p:selectOneMenu id="tipoInscricao" value="#{InscricaoBean.inscricao.tipoInscricao}" required="true" effect="fold" >
+                                <f:selectItem itemLabel="Selecione o tipo de inscrição" itemValue="" />
+                                <f:selectItems value="#{InscricaoBean.tiposInscricao}" var="tipo" itemLabel="#{tipo}" itemValue="#{tipo}" />
+                            </p:selectOneMenu>
+                            
+                            <f:facet name="footer">
+                                <p:commandButton ajax="false" value="Enviar" action="#{InscricaoBean.salvar(Evento.crud.instance,Perfil.crud.instance)}" onsuccess="novaInscricaoDialog.hide()"/>
+                            </f:facet>
+
+                        </p:panelGrid>
+
+                   </h:form>      
+                        
+                </p:outputPanel>
+            
+                </p:dialog>
+            
         </ui:define>  
           
       </ui:composition>

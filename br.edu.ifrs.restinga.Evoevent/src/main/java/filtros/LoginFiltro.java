@@ -15,7 +15,6 @@
  */
 package filtros;
 
-import controle.OperacaoPerfil;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -74,7 +73,7 @@ public class LoginFiltro implements Filter {
                     redirecionar = true;
                     sessao.setAttribute("message"
                             ,"VOCÊ NÃO TEM PERMISSÕES SUFICIENTES PARA ACESSAR ESTA PÁGINA!");
-                     sessao.setAttribute("Perfil", null);
+                    sessao.setAttribute("Perfil", null);
                      
                 }
                 

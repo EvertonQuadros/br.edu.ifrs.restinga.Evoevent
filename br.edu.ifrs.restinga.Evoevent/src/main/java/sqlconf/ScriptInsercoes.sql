@@ -9766,5 +9766,17 @@ insert into cidades values
                 (null,"XAMBIOA",27);
 
 insert into usuarios values(null,"Evoevent","2016-10-4","0","0",null,"U","Outro","EvoeventMail@gmail.com","IFRS Restinga",23,7769,"SUPERIOR COMPLETO","PROGRAMAÇÃO","Usuário gerado automaticamente",(Select uuid()),true,null);
+insert into usuarios values(null,"Everton","2016-10-4","1","1",null,"M","ESTUDANTE","eqdcouto@restinga.ifrs.edu.br","IFRS Restinga",23,7769,"SUPERIOR COMPLETO","PROGRAMAÇÃO","Usuário gerado teste",(Select uuid()),true,null);
+insert into usuarios values(null,"Everton2","2016-10-4","2","2",null,"M","ESTUDANTE","notrevequadrosc@gmail.com","IFRS Restinga",23,7769,"SUPERIOR COMPLETO","PROGRAMAÇÃO","Usuário gerado teste 2",(Select uuid()),true,null);
 
-insert into perfis values(null,null,null,"administrador","admin123",0,4,1); 
+insert into perfis values(null,null,null,"administrador","admin123",0,4,1);
+insert into perfis values(null,null,null,"everton","123",0,3,2);
+insert into perfis values(null,null,null,"everton2","123",0,1,3);
+
+insert into eventos values(null,"Evento teste 1",23,7729,"Rua do João 123","2017-12-30 12:00:00.00","2018-03-27 01:30:00.00","PROGRAMAÇÃO","EVENTO TESTE 1");
+insert into eventos values(null,"Evento teste 2",23,7763,"Avenidade Liberdade 232","2017-01-31 06:00:00.00","2017-02-11 03:30:00.00","PROGRAMAÇÃO","EVENTO TESTE 2");
+insert into eventos values(null,"Evento teste 3",23,7759,"Rua da Praça 91","2017-10-30 11:00:00.00","2017-11-09 10:30:00.00","PROGRAMAÇÃO","EVENTO TESTE 3");
+insert into eventos values(null,"Evento teste 4",23,7753,"Boteco da Maria 33","2016-12-30 10:00:00.00","2016-12-31 02:40:00.00","PROGRAMAÇÃO","EVENTO TESTE 4");
+insert into eventos values(null,"Evento teste 5",23,7755,"Alameda dos Passos 2004","2016-12-30 08:00:00.00","2017-01-01 12:10:00.00","PROGRAMAÇÃO","EVENTO TESTE 5");
+insert into eventos values(null,"Evento teste 6",23,7763,"Centro da Cidade, nº 52","2017-01-31 10:00:00.00","2017-02-11 05:00:00.00","PROGRAMAÇÃO","EVENTO TESTE 6");
+

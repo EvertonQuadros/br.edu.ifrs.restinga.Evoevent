@@ -24,10 +24,92 @@ limitations under the License.
       <ui:composition template="resources/templates/TmpIndex.xhtml">
     
         <ui:define name="body">
-              
-            <h2 class="bodyText">Seja bem vindo!</h2>
+       
+            <h:form>
+                
+                <p:dataGrid var="evento" value="#{Evento.buscarEventos()}" columns="3" layout="grid"
+                            rows="12" paginator="true" id="eventosGrid" paginatorAlwaysVisible="false"
+                paginatorTemplate="{CurrentPageReport}  
+                                    {FirstPageLink} 
+                                    {PreviousPageLink} 
+                                    {PageLinks} 
+                                    {NextPageLink} 
+                                    {LastPageLink} 
+                                    {RowsPerPageDropdown}"
+                rowsPerPageTemplate="6,12,16">
 
-            <p:dialog header="Formulário de Cadastro" widgetVar="cadastroDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="false" modal="true" appendTo="@(body)">
+                <f:facet name="header">
+                    Eventos Disponíveis
+                </f:facet>
+
+                    <p:panel header="#{evento.nomeEvento}" style="text-align:center" styleClass="emailConfirmationPanel">
+                        
+                        <h:panelGrid columns="1" style="width:100%" styleClass="emailConfirmationPanel">
+                            <h:outputText value="#{evento.cidade.nome},#{evento.estado.sigla}" />
+                            <h:outputText value="#{evento.dataHoraInicio}" />
+                            <h:outputText value="#{evento.localEvento}" />
+                            <h:outputText value="#{evento.descricao}" />
+                            
+                            <p:commandButton value="Mais Detalhes" update=":eventoForm:PainelEvento" onclick="PF('eventoDados').show('#{component.clientId}')">
+                                <f:setPropertyActionListener value="#{evento}" target="#{Evento.crud.instance}" />
+                            </p:commandButton>
+                            
+                        </h:panelGrid>
+                        
+                    </p:panel>
+ 
+                </p:dataGrid>
+                
+            </h:form> 
+            
+            <h:form id="eventoForm">
+                
+                <p:dialog widgetVar="eventoDados" showEffect="fade" hideEffect="fade" closable="true" resizable="true" width="50%" height="50%" styleClass="emailConfirmationPanel">
+
+                   <p:outputPanel id="PainelEvento" layout="responsive" >
+
+                        <p:panelGrid columns="2" styleClass="DialogForm"> 
+
+                        <f:facet name="header">
+                            <h:outputText value="#{Evento.crud.instance.nomeEvento}" />
+                        </f:facet>    
+              
+                        <h:outputText value="Estado:" />
+                        <h:outputText value="#{Evento.crud.instance.estado.nome}" />
+
+                        <h:outputText value="Cidade:" />
+                        <h:outputText value="#{Evento.crud.instance.cidade.nome}" />
+                        
+                        <h:outputText value="Local:" />
+                        <h:outputText value="#{Evento.crud.instance.localEvento}" />
+                        
+                        <p:outputLabel for="dataInicio" value="Data de Início: "/>
+                        <p:calendar id="dataInicio" value="#{Evento.crud.instance.dataHoraInicio}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+                        
+                        <p:outputLabel for="dataTermino" value="Data de Término: "/>
+                        <p:calendar id="dataTermino" value="#{Evento.crud.instance.dataHoraTermino}" pattern="dd-MM-yyyy HH:mm" mask="true" readonly="true" disabled="true"/>
+                        
+                        <p:outputLabel for="area" value="Áreas do evento:"/>
+                        <p:selectManyCheckbox id="area" value="#{Evento.crud.instance.area}" layout="grid" columns="3" required="true" styleClass="checkStyle" disabled="true">
+                            <f:selectItems value="#{Evento.crud.instance.area}" var="areas" itemLabel="#{areas}" itemValue="#{areas}" />
+                        </p:selectManyCheckbox>
+                        
+                        <p:outputLabel  for="descricao" value="Descrição:"/>
+                        <p:inputTextarea id="descricao" value="#{Evento.crud.instance.descricao}" rows="6" cols="40" readonly="true"/>
+                        
+                        <f:facet name="footer">
+                            <p:commandButton ajax="false" value="Realizar Inscrição" actionListener="#{PagesBean.getMessage()}"/>
+                        </f:facet>
+                        
+                        </p:panelGrid>
+
+                    </p:outputPanel>
+
+                </p:dialog>
+                    
+            </h:form>   
+            
+            <p:dialog header="Formulário de Cadastro" widgetVar="cadastroDialog" showEffect="fade" hideEffect="fade" closable="true" resizable="true" modal="true" appendTo="@(body)" width="80%" height="40%">
             
                 <p:outputPanel id="Painel" layout="responsive" >
                     

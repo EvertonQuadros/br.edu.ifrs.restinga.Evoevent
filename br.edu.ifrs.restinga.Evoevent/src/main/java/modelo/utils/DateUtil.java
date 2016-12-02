@@ -101,7 +101,7 @@ public class DateUtil {
         * Números positivos aumentam a data, negativos diminuem.
         * @return um novo Objeto Date contendo o resultado da nova data alterada.
         */
-       public static Date getNovaData(UnidadeTempoEnum tempo, int valor){
+        public static Date getNovaData(UnidadeTempoEnum tempo, int valor){
 
             Calendar calendario = Calendar.getInstance();
             calendario.add(tempo.getCampo(), valor);
@@ -111,6 +111,20 @@ public class DateUtil {
                     
         }
         
+       /**
+        * Método que realiza a comparação entre duas datas, utilizada para 
+        * comparação das datas de início e término de um evento, a data de 
+        * término retorna false se a data de termino é igual ou anterior a data
+        * de início.
+        * @param dataInicio objeto do tipo date que é a data de início do evento.
+        * @param dataTermino objeto do tipo date que é a data de término do evento.
+        * @return boolean true (se a data de término é maior que data de início).
+        */
+        public static boolean compararDatas(Date dataInicio, Date dataTermino){
+            return dataTermino.after(dataInicio);
+        }
+        
+       
     }
     
 }

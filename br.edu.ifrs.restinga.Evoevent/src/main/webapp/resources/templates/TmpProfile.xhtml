@@ -35,7 +35,7 @@ limitations under the License.
         <p:layout fullPage="true">
             
             <p:layoutUnit position="north" size="70" styleClass="headStyle">
-  
+
                 <h:form>
                     
                     <p:toolbar>
@@ -60,13 +60,13 @@ limitations under the License.
                 </h:form>
 
             </p:layoutUnit>
-            
-            <p:layoutUnit position="east" size="175">
-               <ui:insert name="menu"/> 
-            </p:layoutUnit>
 
             <p:layoutUnit position="center" styleClass="bodyStyle">
                 <ui:insert name="body"/>
+            </p:layoutUnit>
+            
+            <p:layoutUnit position="south" size="100" styleClass="footerStyle">
+                <h2 class="footerText">#{PagesBean.inicializaRodape()}</h2>
             </p:layoutUnit>
             
         </p:layout>

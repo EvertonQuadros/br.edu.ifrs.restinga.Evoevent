@@ -83,7 +83,7 @@ public abstract class Dao<T extends Entidade> {
     protected void atualizar(T object){
         
         sessao = HibernateUtil.getSessionFactory().getCurrentSession();
-        sessao.update(object);
+        sessao.merge(object);
         
     }
     

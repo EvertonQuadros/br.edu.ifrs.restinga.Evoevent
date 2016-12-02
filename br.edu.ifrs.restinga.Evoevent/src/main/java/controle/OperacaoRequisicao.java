@@ -19,10 +19,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import modelo.Perfil;
 import modelo.Requisicao;
 import modelo.Requisicao.SituacaoEnum;
+import modelo.Requisicao.TituloEnum;
 import modelo.Usuario;
 import modelo.utils.DateUtil;
 import modelo.utils.EmailUtil;
@@ -39,6 +41,9 @@ public class OperacaoRequisicao implements Serializable{
     
     private final Crud crud = new Crud(Requisicao.class, new Requisicao());
     
+    @Inject 
+    OperacaoPerfil opPerfil;
+    
     public Crud getCrud() {
         return crud;
     }
@@ -54,7 +59,9 @@ public class OperacaoRequisicao implements Serializable{
             
             ((Requisicao)crud.getInstance()).setSituacao(SituacaoEnum.AGUARDANDO);
             ((Requisicao)crud.getInstance()).setUsuario(usuario);
-            ((Requisicao)crud.getInstance()).setDescricao("Requisição de novo perfil");
+            ((Requisicao)crud.getInstance()).setTitulo(TituloEnum.NOVO_PERFIL);
+            ((Requisicao)crud.getInstance()).setDescricao("O usuário "+usuario.getNome()
+                                                           + " deseja cadastrar-se no evoevent.");
             ((Requisicao)crud.getInstance()).setDataVencimento();
             
             crud.salvar();
@@ -66,6 +73,119 @@ public class OperacaoRequisicao implements Serializable{
         }
         
     }
+    
+    /**
+     * Método que cria uma requisição de promoção para um perfil.
+     */
+    public void requisitaPromocao(){
+        
+        List<Requisicao> requisicoes = crud.consultaLista("FROM Requisicao WHERE "
+                + "perfil_id = :perfil_id "
+                + "and respondido = false "
+                + "and data_vida >= now()"
+                ,new String[]{"perfil_id"}
+                ,new String[]{String.valueOf(opPerfil.GetPerfilSession().getId())});
+
+        if(requisicoes != null && !requisicoes.isEmpty()){
+            
+            for(Requisicao requisicao : requisicoes){
+                
+                if(requisicao.getTitulo().startsWith("PROMOVER")){
+
+                    MessagesUtil.Messages.getCurrentMessage(
+                    Requisicao.class
+                   ,"Você possui uma requisição de promoção não respondida!"
+                   ,MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                   ,MessagesUtil.SeveridadeEnum.ERRO);
+                    break;
+                    
+                }
+                
+            }
+            
+        }
+        else{
+            
+            if(opPerfil.GetPerfilSession().getTipo().equals("GERENTE DE EVENTOS") 
+                    || opPerfil.GetPerfilSession().getTipo().equals("ADMINISTRADOR")
+                    || opPerfil.GetPerfilSession().getTipo().contains(
+                            ((Requisicao)crud.getInstance()).getTitulo()
+                                    .replaceAll("PROMOVER_", ""))){
+                
+                MessagesUtil.Messages.getCurrentMessage(
+                        Requisicao.class
+                       ,"Seu perfil possui este nível de promoção!"
+                       ,MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                       ,MessagesUtil.SeveridadeEnum.ERRO);
+                
+            }
+            else{
+            
+                ((Requisicao)crud.getInstance()).setSituacao(SituacaoEnum.AGUARDANDO);
+                ((Requisicao)crud.getInstance()).setUsuario(opPerfil.GetPerfilSession().getUsuario());
+                ((Requisicao)crud.getInstance()).setPerfil(opPerfil.GetPerfilSession()); 
+                ((Requisicao)crud.getInstance()).setDataVencimento();
+                ((Requisicao)crud.getInstance()).setDescricao("O perfil" 
+                        + opPerfil.GetPerfilSession().getLogin()
+                        + " do usuário " 
+                        + opPerfil.GetPerfilSession().getUsuario().getNome()
+                        + " Requisita uma promoção de perfil.");
+
+                if(((Requisicao)crud.getInstance()).getTitulo() == null) {
+                    MessagesUtil.Messages.getCurrentMessage(
+                            Requisicao.class
+                           ,"O tipo da requisição deve ser selecionada!"
+                           ,MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                           ,MessagesUtil.SeveridadeEnum.ERRO);
+                }
+                else{
+
+                    crud.salvar();
+
+                    MessagesUtil.Messages.getCurrentMessage(Requisicao.class
+                            ,"criada com sucesso, aguarde o email com a resposta."
+                            , MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                            , MessagesUtil.SeveridadeEnum.INFO);
+
+                }
+        
+            }
+            
+        }
+        
+    }
+    
+//    public void requisitaInscricao(String tipo, Evento evento){
+//        
+//        if(tipo == null){
+//            MessagesUtil.Messages.getCurrentMessage(Requisicao.class
+//                    ,"O tipo de inscrição deve ser selecionado!"
+//                    , MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+//                    , MessagesUtil.SeveridadeEnum.AVISO);
+//        }
+//        else if (tipo.equals("REVISOR DE TRABALHOS") 
+//                && opPerfil.GetPerfilSession().getTipo().equals("PADRAO")){
+//             MessagesUtil.Messages.getCurrentMessage(Requisicao.class
+//                    ,"Você não possui promoção de revisor para selecionar este"
+//                            + "tipo de inscrição"
+//                    , MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+//                    , MessagesUtil.SeveridadeEnum.AVISO);
+//        } 
+//        else{
+//            
+//            ((Requisicao)crud.getInstance()).setSituacao(SituacaoEnum.AGUARDANDO);
+//            ((Requisicao)crud.getInstance()).setUsuario(opPerfil.GetPerfilSession().getUsuario());
+//            ((Requisicao)crud.getInstance()).setPerfil(opPerfil.GetPerfilSession());
+//            ((Requisicao)crud.getInstance()).setTitulo(TituloEnum.NOVA_INSCRICAO);
+//            ((Requisicao)crud.getInstance()).setDataVencimento();
+//            ((Requisicao)crud.getInstance()).setDescricao("REQUISIÇÃO DE INSCRIÇÃO: " 
+//                                                + evento.getId()
+//                                                + ":"
+//                                                + tipo);
+//            
+//        }
+//       
+//    }
     
     /**
      * Método que realiza uma consulta no banco de dados e procura apenas
@@ -85,15 +205,30 @@ public class OperacaoRequisicao implements Serializable{
         return crud.getLista();
         
     }
+    
+    /**
+     * Método que realiza uma busca por requisições de um determinado usuário 
+     * (perfil).
+     * @return lista de objetos do tipo Requisição resultantes da pesquisa.
+     */
+    public List<Requisicao> buscarRequisicoesPerfil(){
+        
+        crud.setLista(crud.consultaLista("FROM Requisicao WHERE destino_id = :destino_id"
+                + " and respondido = false and data_vida >= now()"
+                ,new String[]{"destino_id"}
+                ,new String[]{String.valueOf(opPerfil.GetPerfilSession().getId())}));
+        
+        return crud.getLista();
+        
+    }
    
     /**
      * Método que responde uma requisição preenchendo todos os campos da requisição
      * e enviando a resposta para o usuário via email.
      * @param valor O tipo de resposta, se foi recusado ou aceito.
      * @param perfil O perfil que respondeu a requisição
-     * @return Uma String contendo o redirecionamento para a página de requisições.
      */
-    public String respondeRequisicao(String valor, Perfil perfil){
+    public void respondeRequisicao(String valor, Object perfil){
         
         SituacaoEnum sit;
         
@@ -107,7 +242,7 @@ public class OperacaoRequisicao implements Serializable{
         ((Requisicao)crud.getInstance()).setSituacao(sit);
         ((Requisicao)crud.getInstance()).setRespondido();
         ((Requisicao)crud.getInstance()).setDataResposta(new Date());
-        ((Requisicao)crud.getInstance()).setDestino(perfil);        
+        ((Requisicao)crud.getInstance()).setDestino((Perfil)perfil);        
         
         EmailUtil.Email.enviaEmail((
             (Requisicao)crud.getInstance()).getUsuario().getEmail()
@@ -122,7 +257,37 @@ public class OperacaoRequisicao implements Serializable{
         
         crud.atualizar();
         
-        return "administradorpage1";
+    }
+    
+    public OperacaoPerfil getOperacaoPerfil(){
+        return opPerfil;
+    }
+    
+    /**
+     * Método auxiliar, que informa o usuário que da alteração de um atributo,
+     * que será utilizado na requisição de promoção.
+     */
+    public void setPromocaoRevisor(){
+        
+        ((Requisicao)crud.getInstance()).setTitulo(TituloEnum.PROMOVER_REVISOR);
+        MessagesUtil.Messages.getCurrentMessage(Requisicao.class
+                    ,"Promoção Gerente de Revisor de Trabalhos Selecionado."
+                    , MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                    , MessagesUtil.SeveridadeEnum.INFO);
+        
+    }
+    
+    /**
+     * Método auxiliar, que informa o usuário que da alteração de um atributo,
+     * que será utilizado na requisição de promoção.
+     */
+    public void setPromocaoGerente(){
+        
+        ((Requisicao)crud.getInstance()).setTitulo(TituloEnum.PROMOVER_GERENTE);
+        MessagesUtil.Messages.getCurrentMessage(Requisicao.class
+                    ,"Promoção Gerente de Eventos Selecionado."
+                    , MessagesUtil.Messages.OperacaoEnum.REQUISICAO
+                    , MessagesUtil.SeveridadeEnum.INFO);
         
     }
     

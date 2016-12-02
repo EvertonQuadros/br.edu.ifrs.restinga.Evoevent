@@ -88,6 +88,7 @@ usuario_id int not null,
 
 create table requisicoes(
 id int not null auto_increment,
+titulo varchar(50),
 usuario_id int,
 perfil_id int,
 destino_id int,
@@ -100,4 +101,28 @@ data_resposta Date,
     foreign key(usuario_id) references usuarios(id),
     foreign key(perfil_id) references perfis(id),
     foreign key(destino_id) references perfis(id),
+    primary key(id))engine=innodb;
+
+create table eventos(
+id int not null auto_increment,
+nome_evento varchar(100) not null,
+estado_id int not null,
+cidade_id int not null,
+local_evento varchar(100) not null,
+data_hora_inicio DateTime not null,
+data_hora_termino DateTime not null,
+area mediumtext not null,
+descricao mediumtext not null,
+    foreign key(estado_id) references estados(id),
+    foreign key(cidade_id) references cidades(id),
+    primary key(id))engine=innodb;
+
+create table inscricoes(
+id int not null auto_increment,
+evento_id int not null,
+perfil_id int not null,
+data_inscricao Date not null,
+tipo_inscricao enum("ALUNO","PROFESSOR","ORIENTADOR","COLABORADOR","PALESTRANTE","REVISOR DE TRABALHOS","GERENTE DE EVENTO"),
+    foreign key(evento_id) references eventos(id),
+    foreign key(perfil_id) references perfis(id),
     primary key(id))engine=innodb;

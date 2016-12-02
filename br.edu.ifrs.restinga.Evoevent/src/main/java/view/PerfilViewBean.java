@@ -35,8 +35,7 @@ public class PerfilViewBean implements Serializable{
     @Inject 
     OperacaoPerfil perfil;
     
-    Usuario usuario;
-    
+    private Usuario usuario;
     
     @PostConstruct
     public void init(){
@@ -62,5 +61,5 @@ public class PerfilViewBean implements Serializable{
         
         return "Undefined";
     }
-    
+
 }

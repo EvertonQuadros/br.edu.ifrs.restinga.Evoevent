@@ -47,6 +47,11 @@ limitations under the License.
         <to-view-id>/resources/pages/perfil1.xhtml</to-view-id>   
         </navigation-case>        
         
+        <navigation-case>
+        <from-outcome>eventos1</from-outcome>    
+        <to-view-id>/resources/pages/eventos1.xhtml</to-view-id>   
+        </navigation-case>
+        
     </navigation-rule>
     
 </faces-config>

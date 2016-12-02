@@ -145,11 +145,12 @@
 }
 
 /*
-    Classe do painel de confirmação do email e tabelas de requisições.
+    Classe do painel de confirmação do email e tabelas em geral.
 */
 .emailConfirmationPanel, .emailConfirmationPanel td.ui-panelgrid-cell
-    , .emailConfirmationPanel .ui-datatable-data .ui-widget-content {
-    background: white;
+    , .emailConfirmationPanel .ui-datatable-data .ui-widget-content
+    , .emailConfirmationPanel .ui-widget-content {
+    background: white !important;
 }
 
 /*

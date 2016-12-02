@@ -51,9 +51,27 @@ public class Requisicao extends Entidade implements Serializable{
         EXPIRADO;
     }
     
+    /**
+    * Tipo de enumeradores que representam uma descrição padrão para as requisições:
+    * NOVO_PERFIL (Requisição de novo perfil de usuário),
+    * NOVA_INSCRICAO (Requisição de nova inscrição em um evento),
+    * PROMOVER_REVISOR (Requisição de promoção de usuário para revisor de eventos),
+    * PROMOVER_GERENTE (Requisição de promoção de usuário/revisor para gerente de eventos),
+    * OUTROS (Requisições diversas (em breve) ),
+    */
+    public enum TituloEnum {
+        NOVO_PERFIL,
+        NOVA_INSCRICAO,
+        PROMOVER_REVISOR,
+        PROMOVER_GERENTE,
+        OUTRO
+    }
+    
     @Id
     @GeneratedValue
     private int id;
+    
+    private String titulo;
     
     @OneToOne
     @JoinColumn(name = "usuario_id")
@@ -90,6 +108,14 @@ public class Requisicao extends Entidade implements Serializable{
     @Override
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(TituloEnum titulo) {
+        this.titulo = titulo.name();
     }
 
     public Usuario getUsuario() {
